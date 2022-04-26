@@ -8,6 +8,11 @@
 
 <h1>Вход</h1>
 <input type="text"  placeholder="Ввидите логин" class="login">
-<a href="../../../../../../Desktop/qr-site/front_regiser.html" class="gradient-button" >Перейти на</a>
+<a href="edit_users.ftl" class="gradient-button">Перейти на</a>
+
+
+
+<button id="openDialog">Открыть окно</button>
+
 </body>
 </html>
