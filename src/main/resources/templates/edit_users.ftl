@@ -2,23 +2,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    link rel="stylesheet" href="design.css">
     <title>Rotor admin</title>
 </head>
 <body style="text-align: center; font-family: sans-serif">
 <img
         src="/static/rotor_logo.png"
         alt="rotor_logo">
-<h1>Роторррррррррррр </h1>
+
 
 <form name="test" method="post" action="input1.php">
-    <p><b>Имя</b><br>
-        <input type="text" size="40">
-    </p>
-    <p><b>Тип пользователя</b><Br>
-        <input type="radio" name="browser" value="WORKER"> Работник<Br>
-        <input type="radio" name="browser" value="DRIVER"> Водитель<Br>
-        <input type="radio" name="browser" value="ADMIN"> Админ<Br>
-    </p>
+
+    <input type="text"  placeholder="Введите Имя" class="input_name">
+
+    <select class="select">
+        <option>Все</option>
+        <option>Работник</option>
+        <option>Водитель</option>
+        <option>Админ</option>
+    </select>
+    <a href="" class="addUser">+</a>
 </form>
 </body>
 </html>
