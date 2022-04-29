@@ -1,77 +1,114 @@
+<#-- @ftlvariable name="users" type="kotlin.collections.List<com.dru128.models.User>"-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="design.css">
     <title>Rotor admin</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script>
+        function copyId(i)
+        {
+            const id = document.getElementById("user_id" + i).innerText;
+            navigator.clipboard.writeText(id)
+            alert("скопировано в буфер обмена")
+        }
+
+        function deleteUser(i)
+        {
+            const id = document.getElementById("user_id" + i).innerText
+            var dialog = document.querySelector('dialog')
+            document.getElementById("dialog_tile").innerText = "Удалить пользователя " + id + "?"
+            dialog.show()
+            // Показываем диалоговое окно
+
+            document.querySelector("#ok").onclick = async function ()
+            {
+                dialog.close();
+                // const data = { "id": id };
+
+                // удалить пользователя по айди
+                await fetch('/user',
+                {
+                    method: 'DELETE',
+                    headers: {'Content-Type': 'application/json'},
+                    body: id
+                });
+            }
+            document.querySelector("#cansel").onclick = function() { dialog.close() }
+            // здесь нужно создать диалог с подтверждением на удаление пользователя
+        }
+    </script>
+    <style>
+        table {
+            width: 300px; /* Ширина таблицы */
+            margin: auto; /* Выравниваем таблицу по центру */
+        }
+        td {
+            border: 1px solid #066fd5; /* Рамка вокруг таблицы */
+            text-align: center; /* Выравниваем текст по центру ячейки */
+        }
+    </style>
 </head>
 <body style="text-align: center; font-family: sans-serif">
-<img
-        src="rotor_logo.png"
-        alt="rotor_logo">
-
-
-<form name="test" method="post" action="input1.php">
-
-    <input type="text" placeholder="Введите Имя" class="input_name">
-
-    <select class="select">
-        <option>Все</option>
-        <option>Работник</option>
-        <option>Водитель</option>
-        <option>Админ</option>
-    </select>
-
-</form>
-
-<button class="addUser" id="openDialog">+</button>
-<dialog class="dialog">
-    <input type="text" placeholder="Введите идентификатор" class="input_name_dialog" id="IdinputId">
-
-    <select class="select_dialog">
-
-        <option>Работник</option>
-        <option>Водитель</option>
-
-    </select>
-
-
-    <p><input type="checkbox" class="checkbox" id="checkbox" onchange="fun1()">Авто Генератор идентификатора</p>
-
-
-    <p>
-        <button id="closeDialog" class="closeDialog">Закрыть окно</button>
-    </p>
-    <p>
-        <button id="AddDialog" class="AddDialog">Добавить</button>
-    </p>
+<dialog id="window">
+    <h3 id="dialog_tile"></h3>
+    <p><button id="cansel">Отмена</button></p>
+    <p><button id="ok">Удалить</button></p>
 </dialog>
+<h2>Пользователи</h2>
 
-<script>
-    function fun1() {
-        var chbox;
-        var text = document.getElementById('IdinputId')
-        chbox = document.getElementById('checkbox');
-        if (chbox.checked) {
-            text.disabled = true;
-            text.hidden = true;
-        } else {
-            text.disabled = false;
-            text.hidden = false;
-        }
-    }
+<label>
+    <select name="type_user_selector">
+        <option value="ALL">Все</option>
+        <option value="WORKER">Работники</option>
+        <option value="DRIVER">Водители</option>
+        <option value="ADMIN">Администраторы</option>
+    </select>
+</label>
 
-    var dialog = document.querySelector('dialog')
-    document.querySelector(
-        '#openDialog'
-    ).onclick = function () {
-        dialog.show() // Показываем диалоговое окно
-    }
-    document.querySelector(
-        '#closeDialog'
-    ).onclick = function () {
-        dialog.close() // Прячем диалоговое окно
-    }
 
-</script>
+
+  <table id="table_users">
+      <tr>
+          <th>Роль</th>
+          <th>Идентификатор</th>
+      </tr>
+
+      <#list users?reverse as user>
+      <tr>
+
+          <td>
+
+
+              <p id="user_type${user_index}">
+                  <#if user.userType="DRIVER">Водитель
+                  <#else>
+                      <#if user.userType="WORKER">Работник
+                      <#else>
+                          <#if user.userType="ADMIN">Администратор
+                          <#else>
+                              ОШИБКА
+                          </#if>
+                      </#if>
+                  </#if>
+              </p>
+          </td>
+
+          <td>
+              <p
+                      id="user_id${user_index}"
+                      onclick="copyId(${user_index})"
+              >${user.id}</p>
+          </td>
+          <td onclick="deleteUser(${user_index})">
+                  <input
+                          type="image"
+                          src="/static/delete.svg"
+                          >
+          </td>
+      </tr>
+      </#list>
+    </table>
+
+
 </body>
 </html>
